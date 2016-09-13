@@ -1,0 +1,126 @@
+var React = require('react');
+var ReactNative = require('react-native');
+var {
+	View,
+	Text,
+	StyleSheet
+} = ReactNative;
+import GridView from 'react-native-grid-view'
+var DribbbleImage = require("./components/DribbbleImage")
+var Rx = require('@reactivex/rxjs');
+var DribbbleApi = require("./data/api/DribbbleApi")
+
+var IMAGES_PER_ROW = 2;
+
+var cachedPage;
+var shotsSubscription;
+
+class GridItem extends React.Component {
+
+    render() {
+        return (
+            <View style={styles.photo}>
+                <Text>{this.props.item}</Text>
+            </View>
+        )
+    }
+}
+
+class Main extends React.Component {
+    constructor(props) {
+		super(props);
+
+        cachedPage = 1;
+
+        this.state = {
+            dataSource: []
+        };
+
+
+    }
+
+	componentDidMount() {
+		this.popularShots = this.popularShots.bind(this)
+	}
+
+    render() {
+        return (
+			<View style={styles.background}>
+	            <GridView
+	                items={this.state.dataSource}
+	                itemsPerRow={IMAGES_PER_ROW}
+	                renderItem={this.renderItem}
+	                style={styles.container}
+	                onEndReached={this.popularShots.bind(this)}
+	                />
+			</View>
+        )
+    }
+
+    renderItem(item) {
+		return (
+			<DribbbleImage
+				key={item.id}
+				image={item}
+			/>
+		);
+	}
+
+    popularShots() {
+        console.log("popularShots GET, page: " + cachedPage);
+
+        if (shotsSubscription != null && !shotsSubscription.isUnsubscribed) {
+    		return;
+    	}
+
+        var popularShotsGET = DribbbleApi.popularShotsGET(cachedPage);
+
+		shotsSubscription = popularShotsGET
+				.subscribe(
+					(shots) => {
+						console.log("popularShots GET onNext");
+						console.log("shots:", shots);
+
+						cachedPage = cachedPage + 1;
+						this.setState({
+						  dataSource: this.state.dataSource.concat(shots),
+						  loaded: true,
+					  	});
+
+						console.log("2", shotsSubscription);
+						shotsSubscription.unsubscribe();
+						console.log("3", shotsSubscription);
+					},
+					(err) => {
+						console.log("popularShotsGET Error: " + err);
+					}
+				);
+    }
+
+}
+
+var styles = StyleSheet.create({
+	background: {
+		flex: 1,
+		justifyContent: 'center',
+	    alignItems: 'center',
+	    backgroundColor: 'black'
+	},
+	container: {
+		flex: 1,
+		height: 300,
+		alignSelf: 'stretch',
+		borderRadius: 8,
+		backgroundColor: 'white'
+	},
+    photo: {
+        height: 150,
+        flex: 1,
+        borderColor: 'red',
+        borderWidth: 1,
+        alignItems: 'center',
+        flexDirection: 'column'
+    },
+})
+
+module.exports = Main;
