@@ -8,7 +8,7 @@ import {
 class AccountView extends Component {
     render() {
         return (
-            <View>
+            <View style={styles.container}>
                 <Text>ACCOUNT</Text>
             </View>
         );
@@ -16,7 +16,12 @@ class AccountView extends Component {
 }
 
 var styles = StyleSheet.create({
-
+    container: {
+        flex: 1,
+        alignSelf: 'stretch',
+        borderRadius: 8,
+        marginTop: 20
+    }
 });
 
 module.exports = AccountView;

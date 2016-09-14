@@ -8,7 +8,7 @@ import {
 class SearchView extends Component {
     render() {
         return (
-            <View>
+            <View style={styles.container}>
                 <Text>SEARCH</Text>
             </View>
         );
@@ -16,7 +16,12 @@ class SearchView extends Component {
 }
 
 var styles = StyleSheet.create({
-
+    container: {
+        flex: 1,
+        alignSelf: 'stretch',
+        borderRadius: 8,
+        marginTop: 20
+    }
 });
 
 module.exports = SearchView;

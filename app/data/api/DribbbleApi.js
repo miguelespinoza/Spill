@@ -14,7 +14,6 @@ function fetchData(URL) {
 	}).then((response) => response.json());
 
 	return Rx.Observable.defer(() => Rx.Observable.fromPromise(promise));
-	//
 }
 
 module.exports = {
