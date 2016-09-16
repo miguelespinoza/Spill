@@ -77,6 +77,8 @@ class HomeView extends React.Component {
         shotsSubscription = DribbbleApi.popularShotsGET(cachedPage)
             .subscribe(
                 (shots) => {
+                    // console.log("shots: ", shots);
+
                     cachedPage = cachedPage + 1;
                     this.setState({
                         dataSource: this.state.dataSource.concat(shots),
