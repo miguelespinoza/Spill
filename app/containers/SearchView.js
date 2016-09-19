@@ -5,37 +5,127 @@ import {
     StyleSheet
 } from 'react-native';
 
+var DribbbleImage = require("../components/DribbbleImage");
+var SaveButton = require("../components/ios/SaveButton");
+import GridView from 'react-native-grid-view'
+import renderIf from '../components/ViewUtil'
 var SearchBar = require('react-native-search-bar');
 
 var DribbbleApi = require("../data/api/DribbbleApi");
 var cheerio = require('cheerio-without-node-native');
 
+var IMAGES_PER_ROW = 2;
+
 var cachedPage;
+var cachedQuery;
 
 class SearchView extends Component {
     constructor(props) {
         super(props);
 
+        cachedQuery = "";
         cachedPage = 1;
+        this.state = {
+            dataSource: [],
+            showSaveButton: false,
+            saveButtonActive: false
+        };
     }
 
     render() {
         return (
             <View style={styles.container}>
-                <SearchBar
-                    ref='searchBar'
-                    placeholder='Search'
-                    onChangeText={this.search.bind(this)}
+                <View style={{flexDirection:'row', alignItems:'center'} }>
+
+                    <View style={{flex:1}}>
+                        <SearchBar
+                            ref='searchBar'
+                            placeholder='Search Spill'
+                            searchBarStyle={'minimal'}
+                            hideBackground={true}
+                            onChangeText={this.cacheSearch.bind(this)}
+                            onFocus={this.toggleSearchBar.bind(this)}
+                        />
+                    </View>
+
+                    {renderIf(this.state.showSaveButton)(
+                        <SaveButton
+                            onSave={this.saveResults.bind(this)}
+                            isActive={this.state.saveButtonActive}
+                        />
+                    )}
+                </View>
+
+                <GridView
+                    items={this.state.dataSource}
+                    enableEmptySections={true}
+                    itemsPerRow={IMAGES_PER_ROW}
+                    renderItem={SearchView.renderItem}
+                    style={styles.grid_view}
+                    onEndReached={this.search.bind(this)}
                 />
             </View>
         );
     }
 
-    search(query) {
-        DribbbleApi.search(query, cachedPage)
+    static renderItem(item) {
+        return (
+            <DribbbleImage
+                key={item.id}
+                image={item}
+            />
+        );
+    }
+
+    toggleSearchBar() {
+        console.log("toggleSearchBar");
+        this.setState({
+            showSaveButton: !this.state.showSaveButton
+        });
+    }
+
+    cacheSearch(query) {
+        cachedQuery = query;
+        cachedPage = 1;
+
+        console.log("cacheSearch, query: " + query);
+        if (query === "") {
+            this.setState({
+                dataSource: [],
+                saveButtonActive: false
+            });
+            return;
+        }
+
+        this.setState({
+            saveButtonActive: true
+        });
+
+        this.search.bind(this);
+        this.search();
+    }
+
+    search() {
+
+        if (cachedQuery === "") {
+            return;
+        }
+
+        DribbbleApi.search(cachedQuery, cachedPage)
             .subscribe(
                 (results) => {
-                    this.parseShots(results);
+                    cachedPage = cachedPage + 1;
+
+                    var shots = this.parseShots(results);
+
+                    console.log(shots);
+                    if (shots != undefined && shots.length > 0) {
+
+                        this.setState({
+                            dataSource: this.state.dataSource.concat(shots)
+                        });
+                    }
+
                 },
                 (err) => {
                     console.log("search Error: " + err);
@@ -43,20 +133,22 @@ class SearchView extends Component {
             );
     }
 
+    saveResults() {
+        console.log("saveResults: " + cachedQuery);
+    }
+
     // thanks!!!! https://github.com/nickbutcher/plaid/blob/master/app/src/main/java/io/plaidapp/data/api/dribbble/DribbbleSearchConverter.java
     parseShots(results) {
         var $ = cheerio.load(results.toString());
-
-        console.log("cheerio", );
-
         var shots = [];
-
         var that = this;
-        console.log("parseShots");
-        $('li[id^=screenshot]').each(function(i, elem) {\
+
+        $('li[id^=screenshot]').each(function(i, elem) {
             var shot = that.parseShot($(this));
             shots.push(shot);
         });
+
+        return shots;
     }
 
     parseShot(element) {
@@ -70,6 +162,8 @@ class SearchView extends Component {
                 "teaser": imgUrl,
             }
         };
+
+        return shot;
 
         /**
          return new Shot.Builder()
@@ -98,6 +192,9 @@ var styles = StyleSheet.create({
         alignSelf: 'stretch',
         borderRadius: 8,
         marginTop: 20
+    },
+    grid_view: {
+        flex: 1
     }
 });
 
