@@ -1,3 +1,6 @@
+'use strict';
+
+
 import React, { Component } from 'react';
 import {
     Text,
@@ -9,9 +12,11 @@ var DribbbleImage = require("../components/DribbbleImage");
 var SaveButton = require("../components/ios/SaveButton");
 import GridView from 'react-native-grid-view'
 import renderIf from '../components/ViewUtil'
+import timeStamp from "../util/time";
 var SearchBar = require('react-native-search-bar');
 
 var DribbbleApi = require("../data/api/DribbbleApi");
+import DribbbleDB from "../data/db/DribbbleDB";
 var cheerio = require('cheerio-without-node-native');
 
 var IMAGES_PER_ROW = 2;
@@ -30,6 +35,27 @@ class SearchView extends Component {
             showSaveButton: false,
             saveButtonActive: false
         };
+
+        // TODO: Bind all the methods that we will be passing as props.
+        // example
+        /**
+
+         this.renderScene = this.renderScene.bind(this);
+         this._addNewTodoList = this._addNewTodoList.bind(this);
+         this._onPressTodoList = this._onPressTodoList.bind(this);
+
+         */
+
+        // console.log(DribbbleDB);
+        // let filters = DribbbleDB.objects('FilterList');
+        // console.log(filters.length);
+        // if (filters.length <= 1) {
+        //     DribbbleDB.write(() => {
+        //         DribbbleDB.create('FilterList', {name: 'PrimaryFilterDB'});
+        //     });
+        // }
+        // console.log(filters, filters.name, filters.items);
+        // this.filters = filters;
     }
 
     render() {
@@ -135,6 +161,27 @@ class SearchView extends Component {
 
     saveResults() {
         console.log("saveResults: " + cachedQuery);
+
+        if (cachedQuery === "") {
+            return;
+        }
+
+        DribbbleDB.saveFilters(cachedQuery);
+        
+        // console.log(Array.prototype.slice.call(filters));
+        // Array.prototype.slice.call(filters).map((val) => {
+        //     console.log("filter: " + val);
+        // })
+
+        // var plainResults = Array.prototype.map.call(filters, (filter) => {
+        //     var object = {};
+        //     for (var property of FilterList.properties) {
+        //         object[name] = filter[name];
+        //     }
+        //     return object;
+        // });
+        //
+        // console.log(plainResults);
     }
 
     // thanks!!!! https://github.com/nickbutcher/plaid/blob/master/app/src/main/java/io/plaidapp/data/api/dribbble/DribbbleSearchConverter.java
