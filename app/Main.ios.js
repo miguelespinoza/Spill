@@ -25,7 +25,7 @@ class Main extends React.Component {
 		super(props);
 
 		this.state = {
-			scene: 'home'
+			scene: 'account'
 		};
     }
 

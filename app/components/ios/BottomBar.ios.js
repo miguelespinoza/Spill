@@ -7,23 +7,28 @@ var {
     StyleSheet
 } = ReactNative;
 
+import Icon from 'react-native-vector-icons/Ionicons';
+
 class BottomBar extends React.Component {
     render() {
         return (
-          <View style={{backgroundColor:'#de737b', height:50, alignItems:'center', flexDirection:'row', justifyContent:'space-around'}}>
-              <TouchableOpacity onPress={() => this.props.onNavigate('home')}>
-                  <Text style={{color:'#fff', fontWeight:'600', fontSize:12}}>HOME</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.props.onNavigate('search')}>
-                  <Text style={{color:'#fff', fontWeight:'600', fontSize:12}}>SEARCH</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.props.onNavigate('filter')}>
-                  <Text style={{color:'#fff', fontWeight:'600', fontSize:12}}>FILTER</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => this.props.onNavigate('account')}>
-                  <Text style={{color:'#fff', fontWeight:'600', fontSize:12}}>ACCOUNT</Text>
-              </TouchableOpacity>
-          </View>
+            <View>
+                <View style={styles.bottom_top_border}/>
+                    <View style={{height:50, alignItems:'center', flexDirection:'row', justifyContent:'space-around'}}>
+                      <TouchableOpacity onPress={() => this.props.onNavigate('home')}>
+                          <Icon name="md-home"  style={styles.icon}/>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => this.props.onNavigate('search')}>
+                          <Icon name="ios-search-outline"  style={styles.icon}/>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => this.props.onNavigate('filter')}>
+                          <Icon name="ios-funnel-outline"  style={styles.icon}/>
+                      </TouchableOpacity>
+                      <TouchableOpacity onPress={() => this.props.onNavigate('account')}>
+                          <Icon name="ios-person-outline"  style={styles.icon}/>
+                      </TouchableOpacity>
+                    </View>
+            </View>
         );
     }
 
@@ -33,7 +38,16 @@ class BottomBar extends React.Component {
 }
 
 var styles = StyleSheet.create({
-
+    bottom_top_border: {
+        borderTopWidth:1,
+        borderTopColor: '#e0e0e0',
+        marginLeft: 16,
+        marginRight: 16
+    },
+    icon: {
+        fontSize: 30,
+        color: 'grey'
+    }
 })
 
 module.exports = BottomBar;

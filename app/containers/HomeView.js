@@ -99,7 +99,6 @@ var styles = StyleSheet.create({
     container: {
         flex: 1,
         alignSelf: 'stretch',
-        borderRadius: 8,
         marginTop: 20
     },
     photo: {
