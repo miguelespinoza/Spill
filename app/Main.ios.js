@@ -25,7 +25,13 @@ class Main extends React.Component {
 		super(props);
 
 		this.state = {
-			scene: 'account'
+			scene: 'home',
+			selectedScene: {
+				"home": true,
+				"search": false,
+				"filter": false,
+				"account": false
+			}
 		};
     }
 
@@ -37,6 +43,7 @@ class Main extends React.Component {
 			<View style={styles.background}>
 				{this.renderScene()}
 				<BottomBar
+					selected={this.state.selectedScene}
 					onNavigate={this.setScene.bind(this)}
 					style={styles.bottom_nav}/>
 			</View>
@@ -44,8 +51,19 @@ class Main extends React.Component {
     }
 
     setScene(newScene) {
+
+		var scenesMap = {
+			"home": false,
+			"search": false,
+			"filter": false,
+			"account": false
+		};
+
+		scenesMap[newScene] = true;
+
 		this.setState({
-			scene: newScene
+			scene: newScene,
+			selectedScene: scenesMap
 		});
 	}
 

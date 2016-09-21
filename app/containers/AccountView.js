@@ -8,6 +8,8 @@ import {
 
 import Icon from 'react-native-vector-icons/Ionicons';
 
+var DribbbleLogin = require("../components/DribbbleLogin");
+
 var dribbblePink = '#EA4D89';
 
 // class DribbbleLogInButton extends Component {
@@ -25,7 +27,7 @@ class AccountView extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Text>ACCOUNT</Text>
+                <DribbbleLogin/>
             </View>
         );
     }
@@ -36,7 +38,7 @@ var styles = StyleSheet.create({
         flex: 1,
         alignSelf: 'stretch',
         borderRadius: 8,
-        marginTop: 20,
+        marginTop: 20
     }
 });
 
