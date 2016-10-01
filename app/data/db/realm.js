@@ -13,4 +13,18 @@ FilterItem.schema = {
     },
 };
 
-export default new Realm({schema: [FilterItem]});
+class Account {}
+Account.schema = {
+    name: 'Account',
+    properties: {
+        id: 'string',
+        name: 'string',
+        dribbble_access_token: 'string',
+        dribbble_token_type: 'string',
+        dribbble_token_created_at: 'string',
+        dribbble_scope: 'string',
+        dribbble_avatar_url: 'string'
+    }
+};
+
+export default new Realm({schema: [FilterItem, Account]});

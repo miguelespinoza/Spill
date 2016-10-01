@@ -27,9 +27,15 @@ class AccountView extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <DribbbleLogin/>
+                <DribbbleLogin
+                    onLoginSuccess: {}
+                />
             </View>
         );
+    }
+
+    displayMainAccountView() {
+
     }
 }
 
