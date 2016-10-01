@@ -9,6 +9,7 @@ import {
 import Icon from 'react-native-vector-icons/Ionicons';
 
 var DribbbleLogin = require("../components/DribbbleLogin");
+var MainAccountView = require("../components/MainAccountView");
 
 var dribbblePink = '#EA4D89';
 
@@ -23,19 +24,40 @@ var dribbblePink = '#EA4D89';
 //     }
 // }
 
+
+
 class AccountView extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            scene: 'login'
+        };
+    }
+
     render() {
         return (
             <View style={styles.container}>
-                <DribbbleLogin
-                    onLoginSuccess: {}
-                />
+                {this.accountNavigator()}
             </View>
         );
     }
 
-    displayMainAccountView() {
+    accountNavigator() {
+        switch (this.state.scene) {
+            case 'login':
+                return (
+                    <DribbbleLogin
+                        onLoginSuccess = {this.displayMainAccountView.bind(this)}
+                    />
+                );
+            case 'main_view':
+                return <MainAccountView/>
+        }
+    }
 
+    displayMainAccountView() {
+        this.setState({scene: 'main_view'})
     }
 }
 

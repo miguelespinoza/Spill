@@ -40,6 +40,10 @@ export const DribbbleDB = {
                 dribbble_avatar_url: account["avatar_url"]
             });
         });
+    },
+
+    getDribbbleAccount() {
+        return realm.objects('Account')[0];
     }
 };
 

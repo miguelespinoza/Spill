@@ -138,6 +138,7 @@ class DribbbleLogin extends Component {
     saveUserAccount(account) {
         DribbbleDB.saveDribbbleAccount(account);
         // notifyUI
+        this.props.onLoginSuccess();
     }
 }
 
